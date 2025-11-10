@@ -5,7 +5,10 @@ pipeline {
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
+        IMAGE_TAG  = "${env.BUILD_NUMBER}"
         DOCKER_CREDS = 'dockerhub-cred'
+        GIT_BRANCH  = "${env.BRANCH_NAME}"
+        GIT_COMMIT_MESSAGE = "Automated update from Jenkins ${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -23,38 +26,44 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                buildDockerImage()
+                buildDockerImage(IMAGE_NAME, IMAGE_TAG)
             }
         }
 
         stage('Push Docker Image to Registry') {
             steps {
-                pushDockerImage()
+                pushDockerImage(IMAGE_NAME, IMAGE_TAG)
             }
         }
 
-        stage('Update Deployment deployment.yaml') {
+        stage('Update Deployment YAML') {
             steps {
-                updateDeploymentYaml()
+                updateDeploymentYaml(IMAGE_NAME, IMAGE_TAG)
             }
         }
 
-        stage('Push to GitHub') {
+        stage('Push Changes to GitHub') {
             steps {
-                pushToGithub()
+                pushToGithub(GIT_BRANCH, GIT_COMMIT_MESSAGE)
+            }
+        }
+
+        stage('Remove Local Docker Image') {
+            steps {
+                removeDockerImage(IMAGE_NAME, IMAGE_TAG)
             }
         }
     }
 
     post {
         always {
-            echo 'pipeline completed'
+            echo 'Pipeline completed'
         }
         success {
-            echo 'pipeline completed successfully'
+            echo 'Pipeline completed successfully'
         }
         failure {
-            echo 'pipeline completed with failure'
+            echo 'Pipeline completed with failure'
         }
     }
 }
