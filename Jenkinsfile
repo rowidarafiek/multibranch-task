@@ -57,7 +57,7 @@ pipeline {
                             git config user.email "jenkins@local"
                             git add .
                             git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
-                            git push https://${GIT_USER}:${GIT_PASS}@github.com/rowidarafiek/jenkins.git ${BRANCH_NAME}
+                            git push https://${GIT_USER}:${GIT_PASS}@github.com/rowidarafiek/multibranch-task.git ${BRANCH_NAME}
                         """
                     }
                 }
