@@ -5,10 +5,11 @@ pipeline {
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
-        IMAGE_TAG  = "${env.BUILD_NUMBER}"
+        IMAGE_TAG = "23"
         DOCKER_CREDS = 'dockerhub-cred'
-        GIT_BRANCH  = "${env.BRANCH_NAME}"
-        GIT_COMMIT_MESSAGE = "Automated update from Jenkins ${env.BUILD_NUMBER}"
+        GIT_CREDS = 'github-cred'
+        BRANCH_NAME = 'dev'
+        COMMIT_MESSAGE = "Automated update from Jenkins ${IMAGE_TAG}"
     }
 
     stages {
@@ -29,12 +30,12 @@ pipeline {
                 buildDockerImage(IMAGE_NAME, IMAGE_TAG)
             }
         }
+
         stage('Push Docker Image to Registry') {
-    steps {
-        pushDockerImage(IMAGE_NAME, IMAGE_TAG, DOCKER_CREDS)
-    }
-}
- 
+            steps {
+                pushDockerImage(IMAGE_NAME, IMAGE_TAG, DOCKER_CREDS)
+            }
+        }
 
         stage('Update Deployment YAML') {
             steps {
@@ -44,7 +45,22 @@ pipeline {
 
         stage('Push Changes to GitHub') {
             steps {
-                pushToGithub(GIT_BRANCH, GIT_COMMIT_MESSAGE)
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: GIT_CREDS,
+                        usernameVariable: 'GIT_USER',
+                        passwordVariable: 'GIT_PASS'
+                    )]) {
+                        sh """
+                            git checkout ${BRANCH_NAME} || git checkout -b ${BRANCH_NAME}
+                            git config user.name "${GIT_USER}"
+                            git config user.email "jenkins@local"
+                            git add .
+                            git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
+                            git push https://${GIT_USER}:${GIT_PASS}@github.com/rowidarafiek/jenkins.git ${BRANCH_NAME}
+                        """
+                    }
+                }
             }
         }
 
