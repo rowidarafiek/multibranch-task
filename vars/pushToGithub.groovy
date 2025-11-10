@@ -1,6 +1,6 @@
 def call(String branch = 'dev') {
     echo "Pushing deployment.yaml to GitHub branch ${branch}..."
-    withCredentials([usernamePassword(credentialsId: 'github-cred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+    withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
         sh """
             rm -rf /tmp/multibranch_repo
             git clone https://\$GIT_USER:\$GIT_PASS@github.com/rowidarafiek/multibranch-task.git /tmp/multibranch_repo
