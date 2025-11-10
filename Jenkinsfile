@@ -13,6 +13,12 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+    steps {
+        sh 'git reset --hard; git clean -fdx'
+    }
+}
+
         stage('Run Unit Tests') {
             steps {
                 unitTests()
