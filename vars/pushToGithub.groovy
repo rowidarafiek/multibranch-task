@@ -1,33 +1,35 @@
-stage('Push Changes to GitHub') {
-    steps {
-        script {
-            withCredentials([usernamePassword(
-                credentialsId: GIT_CREDS,
-                usernameVariable: 'GIT_USER',
-                passwordVariable: 'GIT_PASS'
-            )]) {
-                // Clean any uncommitted changes and build artifacts
-                sh '''
-                    git reset --hard
-                    git clean -fdx
-                '''
+def call(String branch, String commitMessage) {
+    withCredentials([usernamePassword(credentialsId: 'github-cred', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+        
+        // Step 1: Remove build artifacts and untracked files
+        sh '''
+            rm -rf target/
+            git reset --hard
+            git clean -fdx
+        '''
 
-                // Checkout branch or create if missing
-                sh """
-                    git fetch origin ${BRANCH_NAME}
-                    git checkout ${BRANCH_NAME} || git checkout -b ${BRANCH_NAME}
-                    git config user.name "${GIT_USER}"
-                    git config user.email "jenkins@local"
-                    git add .
-                    git diff --cached --quiet || git commit -m "${COMMIT_MESSAGE}"
-                """
+        // Step 2: Checkout branch safely
+        sh """
+            git fetch origin ${branch}
+            if git show-ref --verify --quiet refs/heads/${branch}; then
+                git checkout ${branch}
+            else
+                git checkout -b ${branch}
+            fi
+            git config user.name "${GIT_USER}"
+            git config user.email "jenkins@local"
+        """
 
-                // Push using secure string
-                sh '''
-                    git push https://$GIT_USER:$GIT_PASS@github.com/rowidarafiek/multibranch-task.git ${BRANCH_NAME}
-                '''
-            }
-        }
+        // Step 3: Commit changes if any
+        sh """
+            git add .
+            git diff --cached --quiet || git commit -m "${commitMessage}"
+        """
+
+        // Step 4: Push
+        sh '''
+            git push https://$GIT_USER:$GIT_PASS@github.com/rowidarafiek/multibranch-task.git ${branch}
+        '''
     }
 }
 
