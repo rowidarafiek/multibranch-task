@@ -35,13 +35,11 @@ pipeline {
                 pushDockerImage(IMAGE_NAME, IMAGE_TAG)
             }
         }
-
-        stage('Update Deployment YAML') {
-            steps {
-                updateDeploymentYaml(IMAGE_NAME, IMAGE_TAG)
-            }
-        }
-
+        stage('Push Docker Image to Registry') {
+    steps {
+        pushDockerImage(IMAGE_NAME, IMAGE_TAG, DOCKER_CREDS)
+    }
+}
         stage('Push Changes to GitHub') {
             steps {
                 pushToGithub(GIT_BRANCH, GIT_COMMIT_MESSAGE)
