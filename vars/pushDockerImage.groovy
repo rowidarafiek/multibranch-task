@@ -1,10 +1,11 @@
-def call(String imageName, String tag, String creds) {
-    echo "Pushing Docker image ${imageName}:${tag}"
-    withCredentials([usernamePassword(credentialsId: creds, usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-        sh """
-            echo $PASS | docker login -u $USER --password-stdin
-            docker push ${imageName}:${tag}
-        """
+// vars/pushDocker.groovy
+def call(String imageName, String imageTag, String dockerCreds) {
+    echo "Pushing Docker image ${imageName}:${imageTag}"
+    withCredentials([usernamePassword(credentialsId: dockerCreds, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        sh '''
+            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+            docker push ${imageName}:${imageTag}
+        '''
     }
 }
 
