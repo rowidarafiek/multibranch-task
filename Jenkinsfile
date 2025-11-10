@@ -13,12 +13,6 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
-    steps {
-        sh 'git reset --hard; git clean -fdx'
-    }
-}
-
         stage('Run Unit Tests') {
             steps {
                 unitTests()
@@ -49,24 +43,9 @@ pipeline {
             }
         }
 
-        stage('Push Changes to GitHub') {
+        stage('Push Deployment to GitHub') {
             steps {
-                script {
-                    withCredentials([usernamePassword(
-                        credentialsId: GIT_CREDS,
-                        usernameVariable: 'GIT_USER',
-                        passwordVariable: 'GIT_PASS'
-                    )]) {
-                        sh """
-                            git checkout ${BRANCH_NAME} || git checkout -b ${BRANCH_NAME}
-                            git config user.name "${GIT_USER}"
-                            git config user.email "jenkins@local"
-                            git add .
-                            git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
-                            git push https://${GIT_USER}:${GIT_PASS}@github.com/rowidarafiek/multibranch-task.git ${BRANCH_NAME}
-                        """
-                    }
-                }
+                pushToGithub(BRANCH_NAME)
             }
         }
 
