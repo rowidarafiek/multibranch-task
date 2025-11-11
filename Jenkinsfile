@@ -5,10 +5,9 @@ pipeline {
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
-        IMAGE_TAG = "25"
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-cred'
-        BRANCH_NAME = 'dev'
+        BRANCH_NAME = 'stag'
         COMMIT_MESSAGE = "Automated update from Jenkins ${IMAGE_TAG}"
     }
 
