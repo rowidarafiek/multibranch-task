@@ -1,7 +1,7 @@
 @Library('shared-library') _
 
 pipeline {
-    agent { label 'worker' }
+    agent { label 'new-agent' }
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
