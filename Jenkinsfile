@@ -5,7 +5,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
-        IMAGE_TAG = "23"
+        IMAGE_TAG = "25"
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-cred'
         BRANCH_NAME = 'dev'
