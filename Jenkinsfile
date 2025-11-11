@@ -1,7 +1,7 @@
 @Library('shared-library') _
 
 pipeline {
-    agent { label 'linux-docker' }
+    agent { label 'worker' }
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
