@@ -13,18 +13,6 @@ pipeline {
     }
 
     stages {
-        stage('Test Docker') {
-            steps {
-                // Print the user running Jenkins
-                sh 'whoami'
-
-                // Show groups
-                sh 'groups'
-
-                // Run Docker command
-                sh 'sudo  docker ps'
-            }
-        }
     
 
 
