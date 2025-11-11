@@ -7,8 +7,7 @@ pipeline {
         IMAGE_NAME = "rowidarafiek/app"
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-cred'
-        BRANCH_NAME = 'prod'
-        IMAGE_TAG = "25"  // direct numeric tag
+        BRANCH_NAME = 'dev'
     }
 
     stages {
