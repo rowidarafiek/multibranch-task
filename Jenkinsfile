@@ -13,7 +13,6 @@ pipeline {
     }
 
     stages {
-        pipeline {
         stage('Test Docker') {
             steps {
                 // Print the user running Jenkins
@@ -26,7 +25,7 @@ pipeline {
                 sh 'docker ps'
             }
         }
-    }
+    
 
 
         stage('Run Unit Tests') {
