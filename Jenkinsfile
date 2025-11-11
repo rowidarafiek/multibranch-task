@@ -5,11 +5,9 @@ pipeline {
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
-        IMAGE_TAG = "25"
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-cred'
         BRANCH_NAME = 'prod'
-        COMMIT_MESSAGE = "Automated update from Jenkins ${IMAGE_TAG}"
     }
 
     stages {
