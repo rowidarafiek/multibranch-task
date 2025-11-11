@@ -13,22 +13,12 @@ pipeline {
     }
 
     stages {
-        stage('Verify JAR') {
-    steps {
-        echo "Checking if JAR file exists..."
-        sh '''
-            if [ -f target/demo-0.0.1-SNAPSHOT.jar ]; then
-                echo "✓ JAR file found"
-                ls -lh target/demo-0.0.1-SNAPSHOT.jar
-            else
-                echo "✗ ERROR: JAR file not found!"
-                echo "Make sure the JAR is built in another branch/job first"
-                exit 1
-            fi
-        '''
-    }
-}
-
+       stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Run Unit Tests') {
             steps { script { unitTests() } }
         }
