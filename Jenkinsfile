@@ -14,9 +14,9 @@ pipeline {
 
     stages {
        
-        stage('Checkout') {
+        stage('Build JAVA App') {
             steps {
-                checkout scm
+                script{buildApp() }
             }
         }
         stage('Run Unit Tests') {
