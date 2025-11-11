@@ -1,5 +1,3 @@
-@Library('shared-library') _
-
 pipeline {
     agent { label 'new-agent' }
 
@@ -8,7 +6,7 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-pat'
-        BRANCH_NAME = "${env.BRANCH_NAME}" // Multibranch will provide dev/stag/prod
+        BRANCH_NAME = "${env.BRANCH_NAME}"
         COMMIT_MESSAGE = "Automated update from Jenkins ${IMAGE_TAG}"
         DEPLOYMENT_FILE = 'deployment.yaml'
     }
@@ -33,19 +31,23 @@ pipeline {
         stage('Push Docker Image') {
             steps { script { pushDockerImage() } }
         }
-        stage('Push to GitHub') {
-    steps { script { pushToGithub() } }
-}
-       stage('Validate ArgoCD Deployment') {
-    steps {
-        sh 'argocd app sync app'
-        sh 'argocd app wait app --health'
-    }
-}
 
         stage('Update Deployment YAML') {
             steps { script { updateDeploymentYaml() } }
         }
+
+        stage('Push to GitHub') {
+            steps { script { pushToGithub() } }
+        }
+
+        stage('Validate ArgoCD Deployment') {
+            steps {
+                sh 'argocd app sync app'
+                sh 'argocd app wait app --health'
+            }
+        }
+    }
+
     post {
         always { echo 'Pipeline completed' }
         success { echo 'Pipeline completed successfully' }
