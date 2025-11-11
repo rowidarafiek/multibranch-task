@@ -13,12 +13,14 @@ pipeline {
     }
 
     stages {
-           stage('Test Docker') {
+        stage('Test Docker') {
             steps {
                 sh 'whoami'
                 sh 'groups'
                 sh 'docker ps'
             }
+        }
+
         stage('Run Unit Tests') {
             steps {
                 unitTests()
