@@ -1,8 +1,5 @@
 def call() {
     echo "Building application"
-    sh """
-        chmod +x gradlew || true
-        ./gradlew clean build || mvn clean package
-    """
+    sh 'echo "replace with your build command"'
 }
 

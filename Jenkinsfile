@@ -13,62 +13,35 @@ pipeline {
     }
 
     stages {
-    
-
-
         stage('Run Unit Tests') {
-            steps {
-                unitTests()
-            }
+            steps { script { unitTests() } }
         }
 
         stage('Build the Application') {
-            steps {
-                buildApp()
-            }
+            steps { script { buildApp() } }
         }
 
         stage('Build Docker Image') {
-            steps {
-                buildDockerImage(IMAGE_NAME, IMAGE_TAG)
-            }
+            steps { script { buildDockerImage() } }
         }
 
-        stage('Push Docker Image to Registry') {
-            steps {
-                pushDockerImage(IMAGE_NAME, IMAGE_TAG, DOCKER_CREDS)
-            }
+        stage('Push Docker Image') {
+            steps { script { pushDockerImage() } }
         }
 
         stage('Update Deployment YAML') {
-            steps {
-                updateDeploymentYaml(IMAGE_NAME, IMAGE_TAG)
-            }
+            steps { script { updateDeploymentYaml() } }
         }
 
-        stage('Push Deployment to GitHub') {
-            steps {
-                pushToGithub(BRANCH_NAME)
-            }
-        }
-
-        stage('Remove Local Docker Image') {
-            steps {
-                removeDockerImage(IMAGE_NAME, IMAGE_TAG)
-            }
+        stage('Push to GitHub') {
+            steps { script { pushToGithub() } }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline completed'
-        }
-        success {
-            echo 'Pipeline completed successfully'
-        }
-        failure {
-            echo 'Pipeline completed with failure'
-        }
+        always { echo 'Pipeline completed' }
+        success { echo 'Pipeline completed successfully' }
+        failure { echo 'Pipeline completed with failure' }
     }
 }
 
