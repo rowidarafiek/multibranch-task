@@ -8,6 +8,7 @@ pipeline {
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-cred'
         BRANCH_NAME = 'stag'
+        DOCKER_REGISTRY_FILE = "deployment.yaml"
     }
 
     stages {
