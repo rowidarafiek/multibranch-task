@@ -31,7 +31,11 @@ pipeline {
         stage('Update Deployment YAML') {
             steps { script { updateDeploymentYaml() } }
         }
-
+          stage('Remove Local Docker Image') {
+            steps {
+                script { removeDockerImage() }
+            }
+        }
         stage('Push to GitHub') {
             steps { script { pushToGithub() } }
         }
