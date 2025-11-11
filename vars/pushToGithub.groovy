@@ -1,6 +1,6 @@
 def call() {
 
-    withCredentials([usernamePassword(credentialsId: 'github', 
+    withCredentials([usernamePassword(credentialsId: 'github-pat', 
                                       usernameVariable: 'GIT_USER', 
                                       passwordVariable: 'GIT_PASS')]) {
         sh '''
