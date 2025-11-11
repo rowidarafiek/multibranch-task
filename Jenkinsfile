@@ -7,11 +7,18 @@ pipeline {
         IMAGE_NAME = "rowidarafiek/app"
         DOCKER_CREDS = 'dockerhub-cred'
         GIT_CREDS = 'github-cred'
-        BRANCH_NAME = 'stag'
-        COMMIT_MESSAGE = "Automated update from Jenkins ${IMAGE_TAG}"
+        BRANCH_NAME = 'prod'
+        IMAGE_TAG = "25"  // direct numeric tag
     }
 
     stages {
+
+        stage('Build JAVA App') {
+            steps {
+                script { buildApp() }
+            }
+        }
+
         stage('Run Unit Tests') {
             steps { script { unitTests() } }
         }
@@ -26,6 +33,12 @@ pipeline {
 
         stage('Push Docker Image') {
             steps { script { pushDockerImage() } }
+        }
+
+        stage('Remove Local Docker Image') {
+            steps {
+                script { removeDockerImage() }
+            }
         }
 
         stage('Update Deployment YAML') {
