@@ -13,13 +13,21 @@ pipeline {
     }
 
     stages {
+        pipeline {
         stage('Test Docker') {
             steps {
+                // Print the user running Jenkins
                 sh 'whoami'
+
+                // Show groups
                 sh 'groups'
+
+                // Run Docker command
                 sh 'docker ps'
             }
         }
+    }
+
 
         stage('Run Unit Tests') {
             steps {
