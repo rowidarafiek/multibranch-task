@@ -22,7 +22,7 @@ pipeline {
                 sh 'groups'
 
                 // Run Docker command
-                sh 'docker ps'
+                sh 'sudo  docker ps'
             }
         }
     
