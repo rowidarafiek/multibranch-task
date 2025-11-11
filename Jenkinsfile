@@ -1,14 +1,13 @@
+@Library('shared-library') _
+
 pipeline {
     agent { label 'new-agent' }
 
     environment {
         IMAGE_NAME = "rowidarafiek/app"
-        IMAGE_TAG = "${env.BUILD_NUMBER}"
         DOCKER_CREDS = 'dockerhub-cred'
-        GIT_CREDS = 'github-pat'
-        BRANCH_NAME = "${env.BRANCH_NAME}"
-        COMMIT_MESSAGE = "Automated update from Jenkins ${IMAGE_TAG}"
-        DEPLOYMENT_FILE = 'deployment.yaml'
+        GIT_CREDS = 'github-cred'
+        BRANCH_NAME = 'stag'
     }
 
     stages {
@@ -16,12 +15,8 @@ pipeline {
             steps { script { unitTests() } }
         }
 
-        stage('Build Application') {
+        stage('Build the Application') {
             steps { script { buildApp() } }
-        }
-
-        stage('Verify Build Artifact') {
-            steps { sh 'ls -l target/' }
         }
 
         stage('Build Docker Image') {
@@ -38,13 +33,6 @@ pipeline {
 
         stage('Push to GitHub') {
             steps { script { pushToGithub() } }
-        }
-
-        stage('Validate ArgoCD Deployment') {
-            steps {
-                sh 'argocd app sync app'
-                sh 'argocd app wait app --health'
-            }
         }
     }
 
