@@ -4,12 +4,14 @@ pipeline {
     agent { label 'new-agent' }
 
     environment {
-        IMAGE_NAME = "rowidarafiek/app"
-        DOCKER_CREDS = 'dockerhub-cred'
-        GIT_CREDS = 'github-cred'
-        BRANCH_NAME = 'stag'
-        DOCKER_REGISTRY_FILE = "deployment.yaml"
-    }
+    IMAGE_NAME = "rowidarafiek/app"
+    DOCKER_CREDS = 'dockerhub-cred'
+    GIT_CREDS = 'github-cred'
+    BRANCH_NAME = 'stag'
+    NAMESPACE = 'stag'
+    COMMIT_MESSAGE = "Update deployment for ${BRANCH_NAME}"
+    ARGO_REPO = "https://github.com/rowidarafiek/Argocd.git"
+}   
 
     stages {
         stage('Run Unit Tests') {
